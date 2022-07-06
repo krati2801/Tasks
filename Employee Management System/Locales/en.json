@@ -68,6 +68,14 @@
 		"BANDWIDTH_LIMIT_EXCEEDED": 509,
 		"NOT_EXTENDED": 510,
 		"NETWORK_AUTHENTICATION_REQUIRED": 511
+	},
+
+	"VALIDATION": {
+		"EXISTS": {
+			"EMAILORPHONE": "Email or Mobile Number is already registered!!"
+		}
+	},
+	"EMPLOYEE": {
+		 "ADDED": "Employee was added successfully!!"
 	}
-	
 }

@@ -1,4 +1,7 @@
 'use strict';
+// PATH DATA OF WHERE TO STORE FILES
+const { PATHS } = require("../../Configs/constants");
+const { IMAGES } = PATHS;
 const {
   Model
 } = require('sequelize');
@@ -12,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      emp_details.hasMany(models.emp_education_details,{
+        as: 'Roles',  foreignKey: 'empId' 
+      });
     }
   }
   emp_details.init({
@@ -33,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(150),
       get() {
         let image = this.getDataValue("image")
-        return (image) ? fileManager.getUrl(IMAGES.USER_PROFILE + IMAGES.ORIGINAL, image) : null
+        return (image) ? fileManager.getUrl(IMAGES.ORIGINAL, image) : null
       }
     },
     presentAddress: DataTypes.STRING(150),

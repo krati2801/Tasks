@@ -77,7 +77,7 @@ exports.STATUS_CODES = {
 exports.PATHS = {
     IMAGES: {
         TEMP: "/Temp",
-        ORIGINAL: "/original",
+        ORIGINAL: "/Original",
         THUMB: "/thumb",
         USER_PROFILE: "/users/profile",
         USER_IMAGE: "/users/image",

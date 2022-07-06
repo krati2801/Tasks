@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+     emp_education_details.belongsTo(models.emp_details,{
+         as: 'Roles',  foreignKey: 'empId' 
+      });
     }
   }
   emp_education_details.init({
@@ -22,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     empId: {
       type: DataTypes.UUID,
+      allowNull: false
     },
     name: {
       type: DataTypes.STRING(150)
