@@ -19,6 +19,7 @@ module.exports = class FileManager {
         const storage = multer.diskStorage({
             destination: function (req, file, cb) {
                 console.log("img", tempPath.original);
+                console.log("req", req.body)
                 cb(null, tempPath.original)
             },
             filename: function (req, file, cb) {
@@ -42,6 +43,12 @@ module.exports = class FileManager {
     static getUrl(pathName, fileName) {
         const key = pathName + "/" + fileName
         return `http://localhost:5000/Images/Temp${key}`
+    }
+
+    static removeFile(fileName){
+        return fs.unlink(tempPath.original + fileName, function(err) {
+            if (err) console.log(err)
+        })
     }
 
 }

@@ -1,5 +1,7 @@
 'use strict';
-const { SKILLS } = require("../../Configs/constants");
+const { SKILLS, PATHS } = require("../../Configs/constants");
+const { IMAGES } = PATHS;
+const fileManager = require("../../Managers/File.Manager")
 const {
   Model
 } = require('sequelize');
@@ -12,6 +14,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.emp_details.hasMany(emp_professional_details, { as: "professional", foreignKey: "empId", onDelete: "CASCADE", onUpdate: "NO ACTION" })
+      emp_professional_details.belongsTo(models.emp_details, {
+        as: "professional",
+        foreignKey: "empId",
+        onDelete: "CASCADE",
+        onUpdate: "NO ACTION"
+      })
     }
   }
   emp_professional_details.init({
@@ -44,7 +53,11 @@ module.exports = (sequelize, DataTypes) => {
       values: [SKILLS.ANGULAR, SKILLS.NODE, SKILLS.REACT, SKILLS.VUE]
     },
     resume: {
-      type: DataTypes.STRING(150)
+      type: DataTypes.STRING(150),
+      get() {
+        let resume = this.getDataValue("resume")
+        return (resume) ? fileManager.getUrl(IMAGES.ORIGINAL, resume) : null
+      }
     },
   }, {
     sequelize,

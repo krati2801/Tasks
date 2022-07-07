@@ -2,6 +2,9 @@ const employeeModel = new (require("../Models/Employee.Model"))();
 
 const { PATHS } = require("../Configs/constants");
 const { IMAGES } = PATHS;
+const fs = require('fs');
+const url = require("url");
+const path = require("path");
 
 const { validationResult } = require("express-validator");
 
@@ -13,7 +16,7 @@ module.exports = class{
       const errors = validationResult(req);
         if(!errors.isEmpty())
         return res.handler.validationError(undefined, errors.array());
-
+      
       const employeeExist = await employeeModel.getDetailByEmailOrPhone(req.body.email, req.body.phone);
         if(employeeExist)
         return res.handler.conflict("VALIDATION.EXISTS.EMAILORPHONE");
@@ -21,7 +24,12 @@ module.exports = class{
       if(req.body.image && req.body.image.length > 0){
         req.body.image = req.body.image[0];
       }
-
+     
+      if(req.body.professional){
+        if(req.body.resume && req.body.resume.length >0){
+         req.body.professional[0].resume = req.body.resume[0]
+        }
+      }
       const newEmployee = await employeeModel.add(req.body);
       res.handler.created(newEmployee, "EMPLOYEE.ADDED");
     } 
@@ -32,8 +40,8 @@ module.exports = class{
 
   async list(req, res) {
     try {
-      const topics = await topicModel.list(req.body);
-      res.handler.success(topics);
+      const employees = await employeeModel.list(req.body);
+      res.handler.success(employees);
     } catch (err) {
       res.handler.serverError(err);
     }
@@ -41,27 +49,22 @@ module.exports = class{
 
   async update(req, res) {
     try {
-      if (req.body.name) {
-        const topicExist = await topicModel.getDetailByIdorName(req.body.name);
-        if (topicExist && topicExist.dataValues.id !== req.params.id)
-          return res.handler.conflict("VALIDATION.EXISTS.TOPIC");
+      if(req.body.email || req.body.phone) {
+        const employeeExist = await employeeModel.getDetailByEmailOrPhone(req.body.email, req.body.phone);
+        if (employeeExist && employeeExist.dataValues.id !== req.params.id)
+          return res.handler.conflict("VALIDATION.EXISTS.EMAILORPHONE");
       }
 
-      if (req.body.image && req.body.image.length > 0) {
-        if (req.body.oldImage) {
-          const fileName = FileManager.getFileNameFromUrl(req.body.oldImage);
-          FileManager.delete(fileName, IMAGES.TOPIC, IMAGES.ORIGINAL);
+      if(req.body.image && req.body.image.length > 0) {
+        if(employeeExist.image!== null){
+          let imageFilename = employee.image.split('/').pop()
+          await FileManager.removeFile(imageFilename)
         }
-
-        await FileManager.generateThumbAndUploadToCloud(
-          req.body.image,
-          IMAGES.TOPIC
-        );
         req.body.image = req.body.image[0];
       }
-
-      await topicModel.updateById(req.body, req.params.id);
-      res.handler.success(undefined, "TOPIC.UPDATED");
+    
+      await employeeModel.updateById(req.body, req.params.id);
+      res.handler.success(undefined, "EMPLOYEE.UPDATED");
     } catch (err) {
       res.handler.serverError(err);
     }
@@ -69,17 +72,22 @@ module.exports = class{
 
   async delete(req, res) {
     try {
-      const topic = await topicModel.getDetailByIdorName(
-        undefined,
-        req.params.id
-      );
-      if (topic && topic.image) {
-        const fileName = FileManager.getFileNameFromUrl(topic.image);
-        FileManager.delete(fileName, IMAGES.TOPIC, IMAGES.ORIGINAL);
-      }
-      await topicModel.deleteById(req.params.id);
-      res.handler.success(undefined, "TOPIC.DELETED");
-    } catch (err) {
+      const employee= await employeeModel.getDetailById(req.params.id);
+     
+      let imageFilename, resumeFileName;
+
+       if(employee && employee.image !== null){
+        imageFilename = employee.image.split('/').pop()
+
+       if(employee.professional && employee.professional[0].resume !== null)
+        resumeFileName = employee.professional[0].resume.split('/').pop()
+       
+      await Promise.all([FileManager.removeFile(imageFilename), FileManager.removeFile(resumeFileName)])
+    }
+      await employeeModel.deleteById(req.params.id);
+      res.handler.success(undefined, "EMPLOYEE.DELETED");
+    } 
+    catch(err){
       res.handler.serverError(err);
     }
   }

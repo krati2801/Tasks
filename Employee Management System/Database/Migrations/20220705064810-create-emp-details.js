@@ -47,7 +47,7 @@ module.exports = {
         type: Sequelize.BIGINT
       },
       panNumber: {
-        type: Sequelize.BIGINT
+        type: Sequelize.STRING(20)
       },
       createdAt: {
         allowNull: false,

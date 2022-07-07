@@ -11,9 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-     emp_education_details.belongsTo(models.emp_details,{
-         as: 'Roles',  foreignKey: 'empId' 
-      });
+      models.emp_details.hasMany(emp_education_details, { as: "education", foreignKey: "empId", onDelete: "CASCADE", onUpdate: "NO ACTION" })
+      emp_education_details.belongsTo(models.emp_details, {
+        as: "education",
+        foreignKey: "empId",
+        onDelete: "CASCADE",
+        onUpdate: "NO ACTION"
+      })
     }
   }
   emp_education_details.init({
