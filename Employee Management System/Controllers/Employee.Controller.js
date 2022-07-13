@@ -47,6 +47,7 @@ module.exports = class{
       res.handler.serverError(err);
     }
   }
+  
 
   async update(req, res) {
     try {
