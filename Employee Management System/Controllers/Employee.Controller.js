@@ -42,10 +42,12 @@ module.exports = class{
     try {
       const employees = await employeeModel.list(req.body);
       res.handler.success(employees);
-    } catch (err) {
+    } 
+    catch(err){
       res.handler.serverError(err);
     }
   }
+  
 
   async update(req, res) {
     try {
