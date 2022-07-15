@@ -37,10 +37,12 @@ module.exports = class {
 
     async update(req, res) {
       try{
-        const productExist = await productModel.getDetailById(req.params.id);
+        if(req.body.productName){
+          const productExist = await productModel.getDetailByName(req.body.productName);
           if(productExist && productExist.dataValues.id !== req.params.id)
             return res.handler.conflict("VALIDATION.EXISTS.PRODUCT");
-         
+        }
+        
           if(req.body.image && req.body.image.length > 0) {
             if(productExist.image!== null && productExist.image !== GeneralHelper.defaultImage()){
               let imageFilename = productExist.image.split('/').pop()
