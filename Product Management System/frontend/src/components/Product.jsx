@@ -60,7 +60,7 @@ function Product(props) {
       if(event.target.checked){
         setSearch(oldArray => [...oldArray, {
           "field" : event.target.name,
-          "value" : event.target.name === "status" ? event.target.value ? 1 : 0 : event.target.value
+          "value" : event.target.name === "status" ? 0 : event.target.value
         }]);
       }
       else{

@@ -2,33 +2,57 @@ import {useState} from 'react';
 import { Menu, Checkbox } from 'antd';
 
 import './Menu.css'
+import { SliderValueLabel } from '@mui/material';
+import { NoBackpackSharp } from '@mui/icons-material';
 
 const { SubMenu } = Menu;
 
+
 export default function Sidebar(props){
+  const checkbox = (name, value ) =>{
+    if(name === "status")
+{
+  value = value === false ? 1 : 0 
+}    console.log(value)
+    return(
+      <>
+      <Checkbox name={name} isChecked={props.check} value={value} onChange={props.handleOnChange}/>
+      </>
+    )
+  }
+  const items = [
+    {
+      label: 'Availability',
+      key: '1',
+      children: [{ label: 'Exclude Out of stock', key: '10', icon: checkbox('status', props.check)}]
+    },
+    {
+      label: 'Name',
+      key: '2',
+      children: [{ label: 'Laptop', key: '20', icon: checkbox('productName','Laptop')},
+                 { label: 'Mobile', key: '21', icon: checkbox('productName','Mobile')},
+                 { label: 'Camera', key: '22', icon: checkbox('productName','Camera')},
+                 { label: 'Watch',  key: '23', icon: checkbox('productName','Watch')}]
+    },
+    {
+      label: 'Price',
+      key: '3',
+      children: [{ label: 'Rs.500 -  Rs.1500',    key: '30', icon: checkbox('price',[500, 1500]), style:{display : 'flex'}},
+                 { label: 'Rs.1500 - Rs.5000',    key: '31', icon: checkbox('price',[1500, 5000])},
+                 { label: 'Rs.5000 - Rs.10000',   key: '32', icon: checkbox('price',[5000, 10000])},
+                 { label: 'Rs.10000 - Rs.25000',  key: '33', icon: checkbox('price',[10000, 25000])},
+                 { label: 'Rs.25000 - Rs.50000',  key: '34', icon: checkbox('price',[25000, 50000])},
+                 { label: 'Rs.50000 - Rs.100000', key: '35', icon: checkbox('price',[50000, 100000])}]
+    },
+  ];
   return(
     <>
      <Menu
           theme="dark"
            mode="inline"
+           items={items}
       >
-        <SubMenu key="1" title="Availability">
-          <Menu.Item key="10" className='menu-item'><Checkbox name="status" isChecked={props.check} value={props.check} onChange={props.handleOnChange}/>&nbsp;Exclude Out of stock</Menu.Item>
-        </SubMenu>
-        <SubMenu key="2" title="Name">
-          <Menu.Item key="20" className='menu-item'><Checkbox name="productName" isChecked={props.check} value="Laptop" onChange={props.handleOnChange}/>&nbsp;Laptop</Menu.Item>
-          <Menu.Item key="21" className='menu-item'><Checkbox name="productName" isChecked={props.check} value="Mobile" onChange={props.handleOnChange}/>&nbsp;Mobile</Menu.Item>
-          <Menu.Item key="22" className='menu-item'><Checkbox name="productName" isChecked={props.check} value="Camera" onChange={props.handleOnChange}/>&nbsp;Camera</Menu.Item>
-          <Menu.Item key="23" className='menu-item'><Checkbox name="productName" isChecked={props.check} value="Watch" onChange={props.handleOnChange}/>&nbsp;Watch</Menu.Item>
-        </SubMenu>
-        <SubMenu key="3" title="Price">
-          <Menu.Item key="30" className='menu-item'><Checkbox name="price" isChecked={props.check} value={[500, 1500]} onChange={props.handleOnChange}/>&nbsp;Rs.500 -  Rs.1500</Menu.Item>
-          <Menu.Item key="31" className='menu-item'><Checkbox name="price" isChecked={props.check} value={[1500, 5000]} onChange={props.handleOnChange}/>&nbsp;Rs.1500 - Rs.5000</Menu.Item>
-          <Menu.Item key="32" className='menu-item'><Checkbox name="price" isChecked={props.check} value={[5000, 10000]} onChange={props.handleOnChange}/>&nbsp;Rs.5000 - Rs.10000</Menu.Item>
-          <Menu.Item key="33" className='menu-item'><Checkbox name="price" isChecked={props.check} value={[10000, 25000]} onChange={props.handleOnChange}/>&nbsp;Rs.10000 - Rs.25000</Menu.Item>
-          <Menu.Item key="34" className='menu-item'><Checkbox name="price" isChecked={props.check} value={[25000, 50000]} onChange={props.handleOnChange}/>&nbsp;Rs.25000 - Rs.50000</Menu.Item>
-          <Menu.Item key="35" className='menu-item'><Checkbox name="price" isChecked={props.check} value={[50000, 100000]} onChange={props.handleOnChange}/>&nbsp;Rs.50000 - Rs.100000</Menu.Item>
-        </SubMenu>
+
      </Menu>
     </>
   )

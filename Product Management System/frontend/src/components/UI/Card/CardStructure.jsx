@@ -16,15 +16,15 @@ export default function CardStructure(props){
       <div className="site-card-wrapper">
         <Row gutter={[16, 24]}>
          {productState.data.map((item, index) => (
-            <>
-              <Col key={index} span={8} xs={24} xl={8}>
-                <Card className='card-inside' 
+          
+              <Col key={item.id} span={8} xs={24} xl={8}>
+                <Card className='card-inside'
                       cover={<img alt={item.productName} src={item.image} style={{height : "150px", paddingTop:"10px"}}/>}
                       actions={[
-                          <EyeOutlined key="view" onClick={() => {
+                          <EyeOutlined onClick={() => {
                             props.toggleDrawer(MODAL_TYPES.VIEW, item);
                         }}/>,
-                          <EditOutlined key="edit"  onClick={() => {
+                          <EditOutlined onClick={() => {
                             props.toggleDrawer(MODAL_TYPES.EDIT, item);
                         }}/>,
                           <Popconfirm
@@ -33,7 +33,7 @@ export default function CardStructure(props){
                           okText="Yes"
                           cancelText="No"
                         >
-                          <DeleteOutlined key="delete" /></Popconfirm>
+                          <DeleteOutlined /></Popconfirm>
                       ]}
                 >
                 <Meta className='meta-style' style={{backgroundColor : item.status === false ? "grey" : item.quantity < 5 ? "#ff4d4d" : ""}}
@@ -45,7 +45,7 @@ export default function CardStructure(props){
                 />
                 </Card>
               </Col>
-            </>
+            
           ))}
 
         </Row>

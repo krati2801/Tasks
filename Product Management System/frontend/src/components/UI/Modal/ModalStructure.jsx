@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { Button, Upload, Modal, Form, Input, Col, Row, message } from 'antd';
+import { Button, Upload, Modal, Form, Input, Col, Row, message, Checkbox } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 import { addProduct, editProduct } from '../../../redux/general/Actions';
@@ -11,6 +11,7 @@ export default function ModalStructure(props) {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [oldPhotos, setOldPhotos] = useState([]);
+  const [check, setCheck] = useState(props.data.status)
   const { TextArea } = Input;
 
   const newProps = {
@@ -28,7 +29,10 @@ export default function ModalStructure(props) {
         },
     ],
   };
- 
+  
+  async function onChange(){
+   setCheck(!check)
+  }
   async function formSubmit(values){
     let dataValues = { ...values };
     let formData = new FormData();
@@ -69,7 +73,6 @@ export default function ModalStructure(props) {
       await props.onSuccess(props.type, { ...props.data, ...dataValues });
       } 
       catch (error) {
-        console.log(error.config)
         message.error(error.response?.data?.message || "Internal Server Error")
         console.log("TCL ~ file: Drawer.jsx ~ line 25 ~ formSubmit ~ error", error);
       }
@@ -122,6 +125,19 @@ export default function ModalStructure(props) {
                 <Input type="number" min="1" maxLength={7} />
               </Form.Item>
             </Col>
+            {props.type === MODAL_TYPES.EDIT ? 
+              <Col span={8}>
+              <Form.Item name="status" label="Availability" valuePropName="checked"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter product availability!!',
+                  }]}>
+                <Checkbox checked={check} onChange={onChange}>Available</Checkbox>
+              </Form.Item>
+            </Col> : <></>
+            }
+          
           </Row>
           <Form.Item
             name="image"
@@ -132,7 +148,7 @@ export default function ModalStructure(props) {
               {props.data.image ? (
                         <Upload
                             {...newProps}
-                            name="logo"
+                            name="image"
                             beforeUpload={() => false}
                             listType="picture"
                             maxCount={1}
@@ -156,6 +172,7 @@ export default function ModalStructure(props) {
         <>   
         <h3>{props.data.productName}</h3>
         {props.data.productDescription ? <p>{props.data.productDescription}</p> : <p>It is best...Try it once!!</p>}
+        <h3>Rs. {props.data.price}</h3>
         {props.data.quantity < 5 ? <h3>Only {props.data.quantity} stocks are left..Hurry up!!</h3>: <p></p>}
         </>
      
