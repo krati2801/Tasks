@@ -43,9 +43,10 @@ module.exports = class {
             return res.handler.conflict("VALIDATION.EXISTS.PRODUCT");
         }
         
+        const product= await productModel.getDetailById(req.params.id);
           if(req.body.image && req.body.image.length > 0) {
-            if(productExist.image!== null && productExist.image !== GeneralHelper.defaultImage()){
-              let imageFilename = productExist.image.split('/').pop()
+            if(product.image!== null && product.image !== GeneralHelper.getDefaultImage()){
+              let imageFilename = product.image.split('/').pop()
               await GeneralHelper.removeFile(imageFilename)
             }
             req.body.image = req.body.image[0];
@@ -62,7 +63,7 @@ module.exports = class {
       async delete(req, res){
         try{
           const product= await productModel.getDetailById(req.params.id);
-            if(product && product.image !== null && product.image !== GeneralHelper.defaultImage()){
+            if(product && product.image !== null && product.image !== GeneralHelper.getDefaultImage()){
               let imageFilename = product.image.split('/').pop()
               await GeneralHelper.removeFile(imageFilename);
             }
