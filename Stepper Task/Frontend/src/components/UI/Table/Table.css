@@ -1,0 +1,13 @@
+table{
+    min-width: 650px;
+}
+
+caption{
+    color:black;
+    align-items:center;
+}
+
+.table-cell{
+    color:#0000008a;
+    font-size:12px;
+}
