@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "id": "8ebf06-7628-7cc5-b115-4e848ad556ca",
+      "type": "Folder",
+      "name": "root",
+      "children": [
+        {
+          "id": "725f7e5-40f2-1ee7-c48c-fa432830872",
+          "name": "index",
+          "type": "File",
+          "children": []
+        }
+      ]
+    }
+  ]
+}
